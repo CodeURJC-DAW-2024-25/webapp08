@@ -2,13 +2,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-PujahoyApplication<pujahoy>",
+            "name": "PujahoyApplication",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
             "mainClass": "com.webapp08.pujahoy.PujahoyApplication",
-            "projectName": "pujahoy",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "projectName": "pujahoy"
         }
     ]
 }
