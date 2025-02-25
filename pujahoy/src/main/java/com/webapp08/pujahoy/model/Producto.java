@@ -20,6 +20,7 @@ public class Producto {
         private long id;
     
         private String datos;
+        private Double valorIni;
         private Date horaIni;
         private Date horaFin;
         private String estado;
@@ -35,7 +36,7 @@ public class Producto {
     
         }
 
-        public Producto(String datos, Date horaIni, Date horaFin, String estado, Blob imagen, Usuario vendedor){
+        public Producto(String datos, Double valorIni, Date horaIni, Date horaFin, String estado, Blob imagen, Usuario vendedor){
             this.datos = datos;
             this.horaIni = horaIni;
             this.horaFin = horaFin;

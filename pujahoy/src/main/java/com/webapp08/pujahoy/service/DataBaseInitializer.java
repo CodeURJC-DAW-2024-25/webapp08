@@ -32,8 +32,8 @@ public class DataBaseInitializer {
 			long millis = System.currentTimeMillis(); // Obtener el tiempo actual en milisegundos
         	Date sqlDate = new Date(millis);
 
-			Producto p1 = new Producto("Producto 1", sqlDate, sqlDate, "En venta", null, user1);
-			Producto p2 = new Producto("Producto 2", sqlDate, sqlDate, "En venta", null, user1);
+			Producto p1 = new Producto("Producto 1", 2.5,  sqlDate, sqlDate, "En venta", null, user1);
+			Producto p2 = new Producto("Producto 2", 2.7, sqlDate, sqlDate, "En venta", null, user1);
 			
 			user1.addProducto(p1);
 			user1.addProducto(p2);

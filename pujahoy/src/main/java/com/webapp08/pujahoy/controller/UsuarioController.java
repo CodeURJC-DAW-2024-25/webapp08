@@ -1,13 +1,19 @@
 package com.webapp08.pujahoy.controller;
 
+import java.sql.Blob;
+import java.sql.Date;
 import java.util.Optional;
+
+import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -116,10 +122,54 @@ public class UsuarioController {
 	}
 
     @GetMapping("/usuario/NuevoProducto")
-    public String nuevoProducto(){
+        public String nuevoProducto(){
+            return "newAuction";
+        }
 
-        return "newAuction";
+    @PostMapping("/usuario/NuevoProducto/submit_auction")
+    public String publicarProducto(
+        @RequestParam("datos") String nombre,
+        @RequestParam("valorIni") double precio,
+        @RequestParam("duracion") int duracion,
+        @RequestParam("estado") String estado,
+        @RequestParam("imagen") MultipartFile imagenFile,
+        HttpSession sesion,
+        Model model) {
+
+        String idUsuario = (String) sesion.getAttribute("id");
+        Optional<Usuario> usuario = usuarioService.findById(idUsuario);
+
+        if (usuario.isPresent()) {
+            try {
+                // Obtener la fecha y hora actual en java.sql.Date
+                Date horaIni = new Date(System.currentTimeMillis());
+                Date horaFin = new Date(horaIni.getTime() + (long) duracion * 24 * 60 * 60 * 1000);
+
+                // Convertir la imagen a Blob
+                Blob imagen = null;
+                if (!imagenFile.isEmpty()) {
+                    byte[] imagenBytes = imagenFile.getBytes();
+                    imagen = new SerialBlob(imagenBytes);
+                }
+
+                Producto producto = new Producto(nombre, precio, horaIni, horaFin, estado, imagen, usuario.get());
+
+                //falta ver si se actualiza desde usuario
+                productoService.save(producto);
+
+                model.addAttribute("producto", producto);
+                return "redirect:/usuario/producto/" + producto.getId();
+                
+            } catch (Exception e) {
+                model.addAttribute("texto", "Error al procesar el producto: ");
+                return "pageError";
+            }
+        } else {
+            model.addAttribute("texto", "Usuario no encontrado");
+            return "pageError";
+        }
     }
+        
 
     @GetMapping("/usuario/verProductos")
     public String verProductos(){

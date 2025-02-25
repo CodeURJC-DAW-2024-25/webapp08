@@ -30,16 +30,21 @@
 										<h3 class="title">Product Information</h3>
 									</div>
 									<div class="form-group">
-										<input class="input" type="text" name="product-name" placeholder="Product Name" required>
+										<input class="input" type="text" name="datos" placeholder="Product Name" required>
 									</div>
 									<div class="form-group">
-										<input class="input" type="number" name="product-price" placeholder="Price" step="0.01" required>
+										<input class="input" type="number" name="valorIni" placeholder="Price" step="0.01" required>
 									</div>
 									<div class="form-group">
-										<textarea class="input" name="product-description" placeholder="Description" rows="4" required></textarea>
+										<select class="input" name="duracion" required>
+											<option value="" disabled selected>Select Duration</option>
+											<option value="7">7 Days</option>
+											<option value="14">14 Days</option>
+											<option value="30">30 Days</option>
+										</select>
 									</div>
 									<div class="form-group">
-										<select class="input" name="product-condition" required>
+										<select class="input" name="estado" required>
 											<option value="" disabled selected>Select Condition</option>
 											<option value="Malo">Malo</option>
 											<option value="Normal">Normal</option>
@@ -59,7 +64,7 @@
 									<label for="product-images" class="custom-upload-btn">
 										<i class="icon-upload"></i> Choose Files
 									</label>
-									<input type="file" id="product-images" name="product-images" accept=".jpg .jpeg" required>
+									<input type="file" id="product-images" name="imagen" accept=".jpg .jpeg" required>
 									<div id="file-list"></div>
 								</div>
 							</div>
@@ -89,6 +94,5 @@
 				}
 			});
 		</script>
-
 
 {{>footer}}

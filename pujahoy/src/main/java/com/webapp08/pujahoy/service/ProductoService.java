@@ -18,4 +18,8 @@ public class ProductoService {
 		return repository.findById(id);
 	}
 
+	public void save(Producto producto) {
+		repository.save(producto);
+	}
+
 }
