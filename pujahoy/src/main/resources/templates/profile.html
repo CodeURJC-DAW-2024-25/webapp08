@@ -1,0 +1,116 @@
+{{>header}}
+
+		<!-- BREADCRUMB -->
+		<div id="breadcrumb" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="breadcrumb-header">account details</h3>
+						<ul class="breadcrumb-tree">
+							<li><a href="#">Home</a></li>
+                            <li class="active">Account</li>
+							
+						</ul>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /BREADCRUMB -->
+
+		<!-- PROFILE SECTION -->
+		<div class="section container">
+			<nav aria-label="breadcrumb" class="main-breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+					<li class="breadcrumb-item active" aria-current="page">User Profile</li>
+				</ol>
+			</nav>
+			{{#Usuario}}
+			<div class="row gutters-sm">
+				<div class="col-md-4 mb-3">
+					<div class="card text-center">
+						<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq_I0JFO2DxoAV3J-sI7ajtx0qW0Q5neaY_A&s" alt="User" class="rounded-circle" width="150">
+						<h4>{{nombre}}</h4>
+						<p class="text-secondary mb-1">Verified User ✔️</p>
+					</div>
+					
+					<div class="card mt-3">
+						
+					<span class="text-secondary">{{descripcion}}</span>
+					</div>
+				</div>
+				
+				<div class="col-md-8">
+					<div class="card mb-3">
+						<div class="user-details-title">
+							<h4>User Details</h4>
+						</div>
+
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-3"><strong>Username</strong></div>
+								<div class="col-sm-9 text-secondary">{{nombreVisible}}</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3"><strong>User Rating</strong></div>
+								<div class="col-sm-9 text-secondary">{{reputacion}}</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3"><strong>Contact</strong></div>
+								<div class="col-sm-9 text-secondary">{{contacto}}</div>
+							</div>
+							{{/Usuario}}
+							<div class="row">
+								<div class="col-sm-12">
+									<a class="btn btn-info" href="/usuario/editar">Edit</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<h4>My Bids & Auctions</h2>
+				<div class="row bids-auctions">
+					<div class="col-md-4">
+						<a href="/usuario/verProductos">
+							<div class="card text-center p-3 hover-card">
+								<i class="fas fa-gavel fa-2x text-primary"></i>
+								<h5>Your Auctions</h5>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-4">
+						<a href="/usuario/NuevoProducto">
+							<div class="card text-center p-3 hover-card">
+								<i class="fas fa-plus-circle fa-2x text-success"></i>
+								<h5>New Auction</h5>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-4">
+						<a href="/usuario/verCompras">
+							<div class="card text-center p-3 hover-card">
+								<i class="fas fa-trophy fa-2x text-info"></i>
+								<h5>Your Winning Bids</h5>
+							</div>
+						</a>
+					</div>
+				</div>
+				
+				
+				<div class="text-left mt-3 profile">
+					<button href="/usuario//banear" class="btn btn-danger">Ban User</button>
+				</div>
+				
+
+		</div>
+		<!-- PROFILE SECTION -->
+
+{{>footer}}
