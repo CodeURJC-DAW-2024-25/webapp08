@@ -75,7 +75,7 @@ public class UsuarioController {
                     model.addAttribute("registrado", false);
                 } else{ //Usuario registrado
                     model.addAttribute("admin", false);
-                    if (product.get().getVendedor_id() == idUser){ //Si el perfil es el suyo propio
+                    if (product.get().getVendedor() == user.get()){ //Si el perfil es el suyo propio
                         model.addAttribute("registrado", true);
                     } else{
                         model.addAttribute("registrado", false);
@@ -137,9 +137,9 @@ public class UsuarioController {
     public String irValorar(Model model, @PathVariable long id, HttpSession sesion){
         Optional<Producto> product = productoService.findById(id);
         if (product.isPresent()) {
-            Optional<Transaccion> trans = transaccionService.findByProducto_id(id);
-            Optional<Usuario> user = usuarioService.findById(trans.get().getComprador_id());
-            Optional<Usuario> user1 = usuarioService.findById((String) sesion.getAttribute("id"));
+            Optional<Transaccion> trans = transaccionService.findByProduct(product.get());
+            Optional<Usuario> user = usuarioService.findById(trans.get().getComprador().getId());//Vendedor
+            Optional<Usuario> user1 = usuarioService.findById((String) sesion.getAttribute("id"));//comprador
             if (user.isPresent() && user1.isPresent()) {
                 if (user.get().getTipo().equals("Usuario registrado") && user1.get().getId().equals(user.get().getId())) {
                     model.addAttribute("id", id);
@@ -170,7 +170,7 @@ public class UsuarioController {
         }
         Optional<Producto> product = productoService.findById(id);
         if (product.isPresent()) {
-            Valoracion val = new Valoracion(product.get().getVendedor_id(),product.get().getId(),puntuacion,comentario);
+            Valoracion val = new Valoracion(product.get().getVendedor(),product.get(),puntuacion,comentario);
             valoracionService.save(val);
             return "productRated";
         } else {
