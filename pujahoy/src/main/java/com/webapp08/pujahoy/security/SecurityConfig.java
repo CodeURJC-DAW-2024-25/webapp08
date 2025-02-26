@@ -5,11 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+// import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -17,35 +22,42 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${okta.oauth2.issuer}")
-    private String issuer;
-    @Value("${okta.oauth2.client-id}")
-    private String clientId;
+    @Autowired
+    public RepositoryUserDetailsService userDetailService;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/css/**").permitAll()
-                .requestMatchers("/img/**").permitAll()
-                .requestMatchers("/static/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .oauth2Login(withDefaults())
-            .logout(logout -> logout
-                .addLogoutHandler(logoutHandler()));
-        return http.build();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    private LogoutHandler logoutHandler() {
-        return (request, response, authentication) -> {
-            try {
-                String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + baseUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {       
+        http
+            .authenticationProvider(authenticationProvider()) // Añadido para usar el provider de autenticación
+            .authorizeHttpRequests(authorize  -> authorize
+                .anyRequest().permitAll()
+            )
+            .formLogin(formLogin -> formLogin
+                .loginPage("/login") 
+                .defaultSuccessUrl("/", true)
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+            );
+
+        return http.build();
     }
 }

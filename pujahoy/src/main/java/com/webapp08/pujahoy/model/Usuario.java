@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
@@ -13,8 +13,8 @@ import jakarta.persistence.OneToMany;
 public class Usuario{
     
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String nombre;
     private int reputacion;
@@ -22,26 +22,34 @@ public class Usuario{
 
     @OneToMany(mappedBy="vendedor")
     private List<Producto> productos;
+    private String pass;
+    private Boolean estatus;
+    private ArrayList<String> roles;
 
     protected Usuario(){
 
     }
 
-    public Usuario(String id, String nombre, int reputacion, String tipo){
-        this.id = id;
+    public Usuario(String nombre, String nombreVisible, int reputacion, String descripcion, String contacto, String pass, Boolean estatus, ArrayList<String> roles){
         this.nombre = nombre;
         this.reputacion = reputacion;
-        this.tipo = tipo;
         List<Producto> productos = new ArrayList<Producto>();
         this.productos = productos;
+        this.pass = pass;
+        this.estatus = estatus;
+        this.roles = new ArrayList<String>(roles);    
     }
 
-    public String getId() {
-        return id;
+    public Long getId() {
+        return this.id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getPass(){
+        return this.pass;
+    }
+
+    public void setPass(String pass){
+        this.pass = pass;
     }
 
     public String getNombre() {
@@ -78,6 +86,10 @@ public class Usuario{
 
     public void addProducto(Producto producto){
         this.productos.add(producto);
+    }
+
+    public ArrayList<String> getRoles(){
+        return this.roles;
     }
     
 }
