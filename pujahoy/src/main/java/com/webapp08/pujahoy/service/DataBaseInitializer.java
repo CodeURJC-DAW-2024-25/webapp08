@@ -22,7 +22,7 @@ import jakarta.annotation.PostConstruct;
 public class DataBaseInitializer {
 
     @Autowired
-	private UsuarioRepository UserRepository;
+	private UsuarioRepository userRepository;
 	 @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -31,14 +31,15 @@ public class DataBaseInitializer {
 
     @PostConstruct
 	public void init() throws IOException, URISyntaxException {
-			Usuario user1 = new Usuario("1", "Juan", 5, "Usuario registrado");
-			Usuario user2 = new Usuario("2", "Pedro", 2, "Usuario registrado");
+			Usuario user1 = new Usuario("Juan", "Juanito", 100, "Descripción de Juan", "juan@example.com", passwordEncoder.encode("password123"), true, new ArrayList<>(List.of("USER"))); 
+			Usuario user2 =  new Usuario("Maria", "Mari", 200, "Descripción de Maria", "maria@example.com", passwordEncoder.encode("securepass456"), true, new ArrayList<>(List.of("ADMIN")));
 
 			long millis = System.currentTimeMillis(); // Obtener el tiempo actual en milisegundos
         	Date sqlDate = new Date(millis);
 
 			Producto p1 = new Producto("Producto 1", sqlDate, sqlDate, "En venta", null, user1);
 			Producto p2 = new Producto("Producto 2", sqlDate, sqlDate, "En venta", null, user1);
+
 			
 			user1.addProducto(p1);
 			user1.addProducto(p2);

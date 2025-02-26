@@ -19,6 +19,7 @@ public class Usuario{
     private String nombre;
     private int reputacion;
     private String tipo;
+    private String contacto;
 
     @OneToMany(mappedBy="vendedor")
     private List<Producto> productos;
@@ -33,6 +34,7 @@ public class Usuario{
     public Usuario(String nombre, String nombreVisible, int reputacion, String descripcion, String contacto, String pass, Boolean estatus, ArrayList<String> roles){
         this.nombre = nombre;
         this.reputacion = reputacion;
+        this.contacto = contacto;
         List<Producto> productos = new ArrayList<Producto>();
         this.productos = productos;
         this.pass = pass;
@@ -44,6 +46,9 @@ public class Usuario{
         return this.id;
     }
 
+    public String getContacto(){
+        return this.contacto;
+    }
     public String getPass(){
         return this.pass;
     }

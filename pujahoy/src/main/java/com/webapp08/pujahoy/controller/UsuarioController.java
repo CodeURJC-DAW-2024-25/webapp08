@@ -42,7 +42,7 @@ public class UsuarioController {
 
     @GetMapping("/usuario") //Cuando acceden a su perfil
     public String verTuPerfilUsuario(Model model, HttpSession sesion){
-        Optional<Usuario> user = usuarioService.findById((String) sesion.getAttribute("id"));
+        Optional<Usuario> user = usuarioService.findById((Long) sesion.getAttribute("id"));
 		if (user.isPresent()) {
             model.addAttribute("Usuario",user.get());
             model.addAttribute("id",user.get().getId());
@@ -62,7 +62,7 @@ public class UsuarioController {
     public String verPerfilAjeno(Model model, @PathVariable long id, HttpSession sesion) {
         Optional<Producto> product = productoService.findById(id);
 		if (product.isPresent()) {
-            String idUser = (String) sesion.getAttribute("id");
+            Long idUser = (Long) sesion.getAttribute("id");
             Optional<Usuario> user = usuarioService.findById(idUser);
             if (product.isPresent()) {
                 String tipo = user.get().getTipo();
@@ -99,9 +99,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/usuario/{id}/banear")
-	public String deletePost(Model model, @PathVariable String id, HttpSession sesion) {
+	public String deletePost(Model model, @PathVariable Long id, HttpSession sesion) {
         Optional<Usuario> user = usuarioService.findById(id);
-        String tipo = usuarioService.findById((String) sesion.getAttribute("id")).get().getTipo();
+        String tipo = usuarioService.findById((Long) sesion.getAttribute("id")).get().getTipo();
 		if (user.isPresent() && tipo.equals("admin")) {
             user.get().setTipo("baned");
             usuarioService.save(user.get());
@@ -139,7 +139,7 @@ public class UsuarioController {
         if (product.isPresent()) {
             Optional<Transaccion> trans = transaccionService.findByProduct(product.get());
             Optional<Usuario> user = usuarioService.findById(trans.get().getComprador().getId());//Vendedor
-            Optional<Usuario> user1 = usuarioService.findById((String) sesion.getAttribute("id"));//comprador
+            Optional<Usuario> user1 = usuarioService.findById((Long) sesion.getAttribute("id"));//comprador
             if (user.isPresent() && user1.isPresent()) {
                 if (user.get().getTipo().equals("Usuario registrado") && user1.get().getId().equals(user.get().getId())) {
                     model.addAttribute("id", id);
