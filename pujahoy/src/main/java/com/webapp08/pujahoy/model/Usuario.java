@@ -1,17 +1,27 @@
 package com.webapp08.pujahoy.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Usuario{
     
     @Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     private String nombre;
     private int reputacion;
     private String tipo;
+
+    @OneToMany(mappedBy="vendedor")
+    private List<Producto> productos;
 
     protected Usuario(){
 
@@ -22,6 +32,8 @@ public class Usuario{
         this.nombre = nombre;
         this.reputacion = reputacion;
         this.tipo = tipo;
+        List<Producto> productos = new ArrayList<Producto>();
+        this.productos = productos;
     }
 
     public String getId() {
@@ -54,6 +66,18 @@ public class Usuario{
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+    public void addProducto(Producto producto){
+        this.productos.add(producto);
     }
     
 }
