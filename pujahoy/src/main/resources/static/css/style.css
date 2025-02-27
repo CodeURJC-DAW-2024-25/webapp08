@@ -2338,3 +2338,7 @@ a {
 #imgup{
   margin: 3em 4em;
 }
+
+.spinner-border{
+  display: none;
+}

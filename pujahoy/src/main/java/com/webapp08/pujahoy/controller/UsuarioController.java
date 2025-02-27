@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -159,30 +160,49 @@ public class UsuarioController {
         return "pageError";
 	}
 
-    @GetMapping("/verProductos")
-    public String verProductos(Model model, HttpServletRequest request, @RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamaño) {
+    @GetMapping("/producto_template")
+    public String verProductos(Model model, HttpServletRequest request,
+                            @RequestParam(defaultValue = "0") int pagina,
+                            @RequestParam(defaultValue = "10") int tamaño) {
         Principal principal = request.getUserPrincipal();
         
         if (principal != null) {
             String username = principal.getName(); // Obtener nombre de usuario
             Optional<Usuario> user = usuarioService.findByNombre(username);
-    
+
             if (user.isPresent()) {
-                List<Producto> productos = productoService.findByVendedor_Nombre(username);
-    
-                System.out.println("Número de productos encontrados: " + productos.size());
-                for (Producto p : productos) {
-                    System.out.println("Producto: " + p.getDatos());
-                }
-    
-                model.addAttribute("productos", productos);
-                return "YourProducts";
-            } 
+                Page<Producto> productos = productoService.obtenerProductosPaginados(username, pagina, tamaño);
+                
+                model.addAttribute("productos", productos); // Pasamos la página completa
+                return "producto_template";
+            }
         }
-    
+
         model.addAttribute("texto", "Usted no está autenticado");
         return "pageError";
-    }
+}
+
+    @GetMapping("/verProductos")
+    public String verProductosIni(Model model, HttpServletRequest request,
+                            @RequestParam(defaultValue = "0") int pagina,
+                            @RequestParam(defaultValue = "10") int tamaño) {
+        Principal principal = request.getUserPrincipal();
+        
+        if (principal != null) {
+            String username = principal.getName(); // Obtener nombre de usuario
+            Optional<Usuario> user = usuarioService.findByNombre(username);
+
+            if (user.isPresent()) {
+                Page<Producto> productos = productoService.obtenerProductosPaginados(username, pagina, tamaño);
+                
+                model.addAttribute("productos", productos); // Pasamos la página completa
+                return "YourProducts";
+            }
+        }
+
+        model.addAttribute("texto", "Usted no está autenticado");
+        return "pageError";
+}
     
 
         

@@ -32,7 +32,7 @@
 			<div id="store" class="col-md-12">
 
 				<!-- store products -->
-				<div class="row">
+				<div class="row" id="yourProdsRow">
 					{{#productos}}
 					<!-- product -->
 					<div class="col-md-4 col-xs-6">
@@ -74,16 +74,14 @@
 				<!-- /store products -->
 
 				<!-- store bottom filter -->
-				<div class="store-filter clearfix">
-					<span class="store-qty">Showing 20-100 products</span>
-					<ul class="store-pagination">
-						<li class="active">1</li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-					</ul>
+				<div class="text-center">
+					<button id="load-more-yposts" class="btn btn-danger">Cargar Más</button>
+					<div id="spinnerY" class="spinner-border text-primary d-block mx-auto" role="status" style="display: none !important; visibility: hidden;">
+						<span class="visually-hidden">Cargando...</span>
+					</div>
 				</div>
+				
+				
 				<!-- /store bottom filter -->
 			</div>
 			<!-- /STORE -->
