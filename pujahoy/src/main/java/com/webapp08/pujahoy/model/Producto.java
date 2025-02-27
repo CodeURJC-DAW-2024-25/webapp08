@@ -15,102 +15,111 @@ import java.util.List;
 @Entity
 public class Producto {
         
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private long id;
-    
-        private String datos;
-        private Date horaIni;
-        private Date horaFin;
-        private String estado;
-        private Blob imagen;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-        @OneToMany(mappedBy="producto")
-        private List<Oferta> ofertas;
+    private String datos;
+    private Double valorIni;
+    private Date horaIni;
+    private Date horaFin;
+    private String estado;
+    private Blob imagen;
 
-        @ManyToOne
-        private Usuario vendedor;
-    
-        protected Producto(){
-    
-        }
+    @OneToMany(mappedBy="producto")
+    private List<Oferta> ofertas;
 
-        public Producto(String datos, String estado, Usuario vendedor){
-            this.datos = datos;
-            this.horaIni = null;//horaIni;
-            this.horaFin = null;//horaFin;
-            this.estado = estado;
-            this.imagen = null;//imagen;
-            this.vendedor = vendedor;
-            this.ofertas = new ArrayList<Oferta>();
-        }
+    @ManyToOne
+    private Usuario vendedor;
 
-        public long getId() {
-            return id;
-        }
+    protected Producto(){
 
-        public void setId(long id) {
-            this.id = id;
-        }
+    }
 
-        public String getDatos() {
-            return datos;
-        }
+    public Producto(String datos, Double valorIni, Date horaIni, Date horaFin, String estado, Blob imagen, Usuario vendedor){
+        this.datos = datos;
+        this.horaIni = horaIni;
+        this.horaFin = horaFin;
+        this.estado = estado;
+        this.imagen = imagen;
+        this.vendedor = vendedor;
+        this.ofertas = new ArrayList<Oferta>();
+    }
 
-        public void setDatos(String datos) {
-            this.datos = datos;
-        }
+    public long getId() {
+        return id;
+    }
 
-        public Date getHoraIni() {
-            return horaIni;
-        }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-        public void setHoraIni(Date horaIni) {
-            this.horaIni = horaIni;
-        }
+    public String getDatos() {
+        return datos;
+    }
 
-        public Date getHoraFin() {
-            return horaFin;
-        }
+    public void setDatos(String datos) {
+        this.datos = datos;
+    }
 
-        public void setHoraFin(Date horaFin) {
-            this.horaFin = horaFin;
-        }
+    public Date getHoraIni() {
+        return horaIni;
+    }
 
-        public String getEstado() {
-            return estado;
-        }
+    public void setHoraIni(Date horaIni) {
+        this.horaIni = horaIni;
+    }
 
-        public void setEstado(String estado) {
-            this.estado = estado;
-        }
+    public Date getHoraFin() {
+        return horaFin;
+    }
 
-        public Blob getImagen() {
-            return imagen;
-        }
+    public void setHoraFin(Date horaFin) {
+        this.horaFin = horaFin;
+    }
 
-        public void setImagen(Blob imagen) {
-            this.imagen = imagen;
-        }
+    public String getEstado() {
+        return estado;
+    }
 
-        public Usuario getVendedor() {
-            return vendedor;
-        }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-        public void setVendedor(Usuario vendedor) {
-            this.vendedor = vendedor;
-        }
+    public Blob getImagen() {
+        return imagen;
+    }
 
-        public List<Oferta> getOfertas() {
-            return ofertas;
-        }
+    public void setImagen(Blob imagen) {
+        this.imagen = imagen;
+    }
 
-        public void setOfertas(List<Oferta> ofertas) {
-            this.ofertas = ofertas;
-        }
+    public Usuario getVendedor() {
+        return vendedor;
+    }
 
-        public void addOferta(Oferta oferta){
-            this.ofertas.add(oferta);
-        }
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public List<Oferta> getOfertas() {
+        return ofertas;
+    }
+
+    public void setOfertas(List<Oferta> ofertas) {
+        this.ofertas = ofertas;
+    }
+
+    public void addOferta(Oferta oferta){
+        this.ofertas.add(oferta);
+    }
+
+    public Double getValorIni() {
+        return valorIni;
+    }
+
+    public void setValorIni(Double valorIni) {
+        this.valorIni = valorIni;
+    }
 
 }

@@ -2,6 +2,7 @@ package com.webapp08.pujahoy.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,8 +38,11 @@ public class DataBaseInitializer {
 			userRepository.save(user2);
 			userRepository.save(user3);
 	
-			Producto product1 = new Producto("Producto1","En venta", user2);
+			long millis = System.currentTimeMillis(); // Obtener el tiempo actual en milisegundos
+        	Date sqlDate = new Date(millis);
 
-			productoRepository.save(product1);
+			Producto p1 = new Producto("Producto 1", 2.5,  sqlDate, sqlDate, "En venta", null, user2);
+
+			productoRepository.save(p1);
 	}
 }
