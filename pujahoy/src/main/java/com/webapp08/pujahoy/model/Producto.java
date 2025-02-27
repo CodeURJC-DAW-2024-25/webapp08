@@ -43,6 +43,7 @@ public class Producto {
         this.estado = estado;
         this.imagen = imagen;
         this.vendedor = vendedor;
+        this.valorIni = valorIni;
         this.ofertas = new ArrayList<Oferta>();
     }
 

@@ -1,5 +1,6 @@
 package com.webapp08.pujahoy.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -46,7 +47,7 @@ public class Usuario{
         this.descripcion = descripcion;
         this.activo = activo;
         this.nombreVisible = nombreVisible;
-        this.productos = null;
+        this.productos = new ArrayList<>();
     }
 
     public Long getId() {
@@ -121,6 +122,10 @@ public class Usuario{
         this.productos = productos;
     }
 
+    public void addProductos(Producto producto) {
+        productos.add(producto);
+    }
+
     public String getContacto() {
         return contacto;
     }
@@ -138,6 +143,7 @@ public class Usuario{
             return "Desconocido";
         }
     }
+
     
     
 }

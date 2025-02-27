@@ -1,5 +1,6 @@
 package com.webapp08.pujahoy.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -158,53 +159,90 @@ public class UsuarioController {
         return "pageError";
 	}
 
+    @GetMapping("/verProductos")
+    public String verProductos(Model model, HttpServletRequest request, @RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamaño) {
+        Principal principal = request.getUserPrincipal();
+        
+        if (principal != null) {
+            String username = principal.getName(); // Obtener nombre de usuario
+            Optional<Usuario> user = usuarioService.findByNombre(username);
+    
+            if (user.isPresent()) {
+                List<Producto> productos = productoService.findByVendedor_Nombre(username);
+    
+                System.out.println("Número de productos encontrados: " + productos.size());
+                for (Producto p : productos) {
+                    System.out.println("Producto: " + p.getDatos());
+                }
+    
+                model.addAttribute("productos", productos);
+                return "YourProducts";
+            } 
+        }
+    
+        model.addAttribute("texto", "Usted no está autenticado");
+        return "pageError";
+    }
+    
+
+        
+
     @GetMapping("/usuario/NuevoProducto")
         public String nuevoProducto(){
             return "newAuction";
         }
 
-    @PostMapping("/usuario/NuevoProducto/submit_auction")
-    public String publicarProducto(
-        @RequestParam("datos") String nombre,
-        @RequestParam("valorIni") double precio,
-        @RequestParam("duracion") int duracion,
-        @RequestParam("estado") String estado,
-        @RequestParam("imagen") MultipartFile imagenFile,
-        HttpServletRequest request,
-        Model model) {    
-        Principal principal = request.getUserPrincipal();    
-        Optional<Usuario> usuario = usuarioService.findByNombre(principal.getName());
-
-        if (principal != null) {
+        @PostMapping("/usuario/NuevoProducto/submit_auction")
+        public String publicarProducto(
+            @RequestParam("datos") String nombre,
+            @RequestParam("valorIni") double precio,
+            @RequestParam("duracion") int duracion,
+            @RequestParam("estado") String estado,
+            @RequestParam("imagen") MultipartFile imagenFile,
+            HttpServletRequest request,
+            Model model) {    
+        
+            Principal principal = request.getUserPrincipal();
+        
+            if (principal == null) {
+                model.addAttribute("texto", "Usuario no encontrado");
+                return "pageError";
+            }
+        
+            Optional<Usuario> usuario = usuarioService.findByNombre(principal.getName());
+        
+            if (usuario.isEmpty()) {
+                model.addAttribute("texto", "Usuario no encontrado en la base de datos");
+                return "pageError";
+            }
+        
             try {
                 // Obtener la fecha y hora actual en java.sql.Date
                 Date horaIni = new Date(System.currentTimeMillis());
                 Date horaFin = new Date(horaIni.getTime() + (long) duracion * 24 * 60 * 60 * 1000);
-
-                // Convertir la imagen a Blob
+        
+                // Convertir la imagen a Blob si existe
                 Blob imagen = null;
                 if (!imagenFile.isEmpty()) {
                     byte[] imagenBytes = imagenFile.getBytes();
                     imagen = new SerialBlob(imagenBytes);
                 }
-
+        
+                // Crear el producto con el usuario obtenido
                 Producto producto = new Producto(nombre, precio, horaIni, horaFin, estado, imagen, usuario.get());
-
-                //falta ver si se actualiza desde usuario
+        
+                // Guardar el producto en la base de datos
                 productoService.save(producto);
-
+        
                 model.addAttribute("producto", producto);
                 return "redirect:/usuario/producto/" + producto.getId();
                 
             } catch (Exception e) {
-                model.addAttribute("texto", "Error al procesar el producto: ");
+                model.addAttribute("texto", "Error al procesar el producto: " + e.getMessage());
                 return "pageError";
             }
-        } else {
-            model.addAttribute("texto", "Usuario no encontrado");
-            return "pageError";
         }
-    }
+        
 
     @GetMapping("/usuario/verCompras")
     public String verCompras(){
