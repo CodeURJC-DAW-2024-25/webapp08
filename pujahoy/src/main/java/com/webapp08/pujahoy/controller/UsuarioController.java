@@ -5,8 +5,13 @@ import java.util.Optional;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +25,7 @@ import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.sql.Blob;
 import java.sql.Date;
+import java.sql.SQLException;
 
 import com.webapp08.pujahoy.model.Usuario;
 import com.webapp08.pujahoy.service.UsuarioService;
@@ -182,6 +188,24 @@ public class UsuarioController {
         return "pageError";
     }
 
+    @GetMapping("/producto/{id}/image")
+	public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+
+		Optional<Producto> op = productoService.findById(id);
+
+		if (op.isPresent() && op.get().getImagen() != null) {
+			
+			Blob image = op.get().getImagen();
+			Resource file = new InputStreamResource(image.getBinaryStream());
+
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+					.contentLength(image.length()).body(file);
+
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
     @GetMapping("/verProductos")
     public String verProductosIni(Model model, HttpServletRequest request,
                             @RequestParam(defaultValue = "0") int pagina,
@@ -247,8 +271,7 @@ public class UsuarioController {
             // Convertir la imagen a Blob si existe
             Blob imagen = null;
             if (!imagenFile.isEmpty()) {
-                byte[] imagenBytes = imagenFile.getBytes();
-                imagen = new SerialBlob(imagenBytes);
+                imagen = BlobProxy.generateProxy(imagenFile.getInputStream(), imagenFile.getSize());
             }
     
             // Crear el producto con el usuario obtenido
