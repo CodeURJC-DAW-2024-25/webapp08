@@ -46,6 +46,7 @@ public class SecurityConfiguration {
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/h2-console/**").permitAll()
 				.anyRequest().permitAll()
 					// PUBLIC PAGES
 					//.requestMatchers("/").permitAll()
@@ -73,6 +74,7 @@ public class SecurityConfiguration {
 		
 		// Disable CSRF at the moment
 		http.csrf(csrf -> csrf.disable());
+		http.headers().frameOptions().sameOrigin();
 
 		return http.build();
 	}

@@ -27,7 +27,7 @@ async function cargarPosts() {
                     document.getElementById("spinnerY").style.visibility = "hidden";
                 }
             } 
-
+            console.log(page)
             page++;
         }
     } catch (error) {
@@ -35,10 +35,55 @@ async function cargarPosts() {
     }
 
     document.getElementById("spinnerY").style.display = "none"; // Ocultar el spinner
+    
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("load-more-yposts").addEventListener("click", cargarPosts);
+    const btnY = document.getElementById("load-more-yposts");
+    if (btnY) {
+        btnY.addEventListener("click", cargarPosts);
+    }
+});
+
+
+async function cargarPosts2() {
+    console.log("presiona")
+    if (noMorePosts) {
+        return;
+    }
+    
+    document.getElementById("spinnerWB").style.display = "block"; // Mostrar el spinner
+    document.getElementById("spinnerWB").style.visibility = "visible";
+    document.getElementById("load-more-WBposts").style.display = "none";
+    await sleep(300);
+    try {
+        const response = await fetch(`/producto_template_compras?pagina=${page}`);
+        const responseNext = await fetch(`/producto_template_compras?pagina=${page+1}`);
+        if (response.ok) {
+            const nuevosPostsHTML = await response.text(); 
+            
+            if (nuevosPostsHTML !== "") {
+                document.getElementById("yourWBRow").innerHTML += nuevosPostsHTML;
+                document.getElementById("load-more-WBposts").style.display = "block";
+                if (!responseNext.ok || (await responseNext.text()).trim() === "") {                   
+                    noMorePosts = true;
+                    document.getElementById("load-more-WBposts").style.display = "none";
+                    document.getElementById("spinnerWB").style.visibility = "hidden";
+                }
+            } 
+
+            page++;
+        }
+    } catch (error) {
+        console.error("Error al cargar los posts:", error);
+    }
+
+    document.getElementById("spinnerWB").style.display = "none"; // Ocultar el spinner
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btnWB = document.getElementById("load-more-WBposts");
+    if (btnWB) btnWB.addEventListener("click", cargarPosts2);
 });
 
 

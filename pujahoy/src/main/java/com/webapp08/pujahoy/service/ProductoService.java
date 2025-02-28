@@ -32,6 +32,11 @@ public class ProductoService {
         return repository.findByVendedor_Nombre(nombreVendedor, pageable);
     }
 
+	public Page<Producto> obtenerProductosComprados(String nombreComprador, int pagina, int tamaño) {
+		Pageable pageable = PageRequest.of(pagina, tamaño);
+        return repository.findProductosCompradosPorUsuario(nombreComprador, pageable);
+    }
+
 
 	public Producto save(Producto producto) {
 		return repository.save(producto);
